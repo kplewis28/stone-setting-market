@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stone Setting — Market Expansion Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D5A3;
+    --gold-pale: #F7F0DC;
+    --dark: #1A1612;
+    --dark-mid: #2D2620;
+    --charcoal: #3D3530;
+    --warm-white: #FAF7F2;
+    --tier1: #7B4A2D;
+    --tier2: #4A6741;
+    --tier3: #2D4A67;
+    --accent-red: #8B2E2E;
+    --cream: #F2EBD9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--warm-white);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(26,22,18,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.5);
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: radial-gradient(ellipse at 60% 40%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(123,74,45,0.1) 0%, transparent 50%),
+                var(--dark);
+    padding: 80px 48px 60px;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -1px;
+    color: var(--warm-white);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(250,247,242,0.55);
+    letter-spacing: 1px;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 64px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.4);
+    margin-top: 6px;
+  }
+
+  .hero-line {
+    position: absolute;
+    bottom: 0;
+    left: 48px; right: 48px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.3);
+    animation: pulse 2s infinite;
+  }
+
+  /* SECTION BASE */
+  .section {
+    padding: 100px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 64px;
+  }
+
+  .section-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+  }
+
+  .section-title-block .eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .section-title-block h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+
+  /* MAP SECTION */
+  .map-section {
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .europe-map-container {
+    position: relative;
+    width: 100%;
+    background: rgba(45,38,32,0.4);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    min-height: 500px;
+  }
+
+  .europe-map-container svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* MAP PINS */
+  .map-pin-group {
+    cursor: pointer;
+  }
+
+  .map-pin-group:hover .pin-label-bg {
+    opacity: 1;
+  }
+
+  /* TIER CARDS */
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .tier-card {
+    padding: 40px 36px;
+    background: var(--dark-mid);
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .tier-card:hover {
+    background: rgba(45,38,32,0.9);
+  }
+
+  .tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .tier-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .tier-badge-text {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .tier-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    margin-bottom: 6px;
+    color: var(--warm-white);
+  }
+
+  .tier-card .tier-location {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .tier-card p {
+    font-size: 13px;
+    color: rgba(250,247,242,0.55);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .tier-tag {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* EXPANSION MAP */
+  .countries-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .country-card {
+    padding: 32px;
+    border: 1px solid rgba(201,168,76,0.12);
+    border-left: 3px solid var(--gold);
+    background: rgba(45,38,32,0.3);
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .country-card:hover {
+    background: rgba(45,38,32,0.6);
+    border-left-color: var(--gold);
+    transform: translateX(4px);
+  }
+
+  .country-flag {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .country-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+
+  .country-city {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .country-card p {
+    font-size: 13px;
+    color: rgba(250,247,242,0.55);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .distance-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 5px 14px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+
+  /* STRATEGY SECTION */
+  .strategy-section {
+    background: linear-gradient(to bottom, var(--dark), var(--dark-mid));
+  }
+
+  .strategy-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .strategy-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0;
+    background: rgba(45,38,32,0.4);
+    border: 1px solid rgba(201,168,76,0.08);
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+
+  .strategy-item:hover {
+    border-color: rgba(201,168,76,0.25);
+    background: rgba(45,38,32,0.7);
+  }
+
+  .strategy-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(201,168,76,0.06);
+    border-right: 1px solid rgba(201,168,76,0.1);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.4);
+  }
+
+  .strategy-content {
+    padding: 28px 36px;
+  }
+
+  .strategy-content h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 8px;
+    color: var(--warm-white);
+  }
+
+  .strategy-content p {
+    font-size: 13px;
+    color: rgba(250,247,242,0.55);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 720px;
+  }
+
+  .strategy-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .stag {
+    padding: 4px 12px;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 2px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+
+  /* FAIRS TABLE */
+  .fairs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(201,168,76,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .fair-card {
+    padding: 28px;
+    background: var(--dark-mid);
+    transition: background 0.3s;
+  }
+
+  .fair-card:hover {
+    background: rgba(45,38,32,0.8);
+  }
+
+  .fair-month {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .fair-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+
+  .fair-location {
+    font-size: 12px;
+    color: rgba(250,247,242,0.4);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .fair-priority {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .priority-high {
+    background: rgba(201,168,76,0.15);
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .priority-med {
+    background: rgba(74,103,65,0.2);
+    color: #7EC971;
+    border: 1px solid rgba(74,103,65,0.3);
+  }
+
+  /* KEY MESSAGE */
+  .message-box {
+    padding: 56px 64px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(123,74,45,0.06) 100%);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .message-box::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.06);
+    line-height: 1;
+  }
+
+  .message-box .quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--warm-white);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .message-box .quote em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  .message-box .attribution {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.35);
+  }
+
+  /* DIVIDER */
+  .gold-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
+    margin: 0 48px;
+    width: calc(100% - 96px);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  footer .foot-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  footer .foot-note {
+    font-size: 11px;
+    color: rgba(250,247,242,0.25);
+    letter-spacing: 1px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+
+  /* TOOLTIP */
+  .tooltip-container { position: relative; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .tiers-grid { grid-template-columns: 1fr; }
+    .countries-grid { grid-template-columns: 1fr; }
+    .fairs-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 32px; flex-wrap: wrap; justify-content: center; }
+    .section { padding: 60px 24px; }
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Stone Setting</div>
+  <ul class="nav-links">
+    <li><a onclick="scrollTo('#switzerland')">Switzerland</a></li>
+    <li><a onclick="scrollTo('#clients')">Key Clients</a></li>
+    <li><a onclick="scrollTo('#europe')">Europe</a></li>
+    <li><a onclick="scrollTo('#strategy')">Strategy</a></li>
+    <li><a onclick="scrollTo('#fairs')">Trade Fairs</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Market Expansion Research — 2025</p>
+  <h1 class="hero-title">Stone Setting<br><em>Market Intelligence</em></h1>
+  <p class="hero-subtitle">A strategic overview of the Swiss and European fine jewelry industry — identifying key clients, expansion routes, and go-to-market approach.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-number">2,777</div>
+      <div class="stat-label">Jewelry firms in Switzerland</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">4</div>
+      <div class="stat-label">Priority European markets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">Tier 1</div>
+      <div class="stat-label">Lucerne-based anchor clients</div>
+    </div>
+  </div>
+  <div class="hero-line"></div>
+  <div class="scroll-hint">↓ Scroll to explore</div>
+</section>
+
+<!-- SECTION 1: SWITZERLAND MAP -->
+<section class="section map-section" id="switzerland">
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <div class="section-title-block">
+      <div class="eyebrow">Home Market</div>
+      <h2>Switzerland's<br>Jewelry Landscape</h2>
+    </div>
+  </div>
+
+  <!-- SVG Map of Switzerland with cities -->
+  <div class="europe-map-container" style="background: rgba(26,22,18,0.7); border: 1px solid rgba(201,168,76,0.15); min-height: 400px; display: flex; align-items: center; justify-content: center; padding: 32px; position: relative;">
+    <svg viewBox="0 0 800 420" style="max-width: 760px; width: 100%;" xmlns="http://www.w3.org/2000/svg">
+      <!-- Switzerland outline simplified -->
+      <path d="M120,160 L160,130 L200,120 L260,110 L320,115 L370,100 L430,105 L490,120 L540,130 L580,150 L600,180 L610,220 L590,260 L560,290 L520,310 L480,320 L440,330 L400,340 L360,345 L320,340 L280,330 L240,315 L200,295 L165,270 L140,240 L115,210 Z" 
+            fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+      
+      <!-- Alps texture lines -->
+      <line x1="200" y1="200" x2="560" y2="200" stroke="rgba(201,168,76,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="180" y1="240" x2="580" y2="240" stroke="rgba(201,168,76,0.05)" stroke-width="1" stroke-dasharray="4,8"/>
+
+      <!-- LUCERNE - YOUR CITY (STAR) -->
+      <g transform="translate(305, 210)">
+        <circle r="18" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.4)" stroke-width="1.5">
+          <animate attributeName="r" values="18;24;18" dur="2.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="8" fill="var(--gold)" stroke="var(--dark)" stroke-width="2"/>
+        <polygon points="0,-6 1.5,-1.5 6,-1.5 2.5,1.5 4,6 0,3.5 -4,6 -2.5,1.5 -6,-1.5 -1.5,-1.5" fill="var(--dark)" transform="scale(0.7)"/>
+        <text y="-26" text-anchor="middle" fill="var(--gold)" font-family="Cormorant Garamond, serif" font-size="12" font-weight="400" letter-spacing="2">LUCERNE</text>
+        <text y="-14" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-family="DM Sans, sans-serif" font-size="8" letter-spacing="1">YOUR BASE</text>
+      </g>
+
+      <!-- GENEVA -->
+      <g transform="translate(148, 270)">
+        <circle r="9" fill="rgba(139,46,46,0.6)" stroke="#C97070" stroke-width="1.5"/>
+        <circle r="4" fill="#E08080"/>
+        <text y="-16" text-anchor="middle" fill="rgba(250,247,242,0.75)" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">GENEVA</text>
+        <text y="-5" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-family="DM Sans, sans-serif" font-size="8">Chopard · Piaget</text>
+        <text y="5" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-family="DM Sans, sans-serif" font-size="8">Boghossian</text>
+      </g>
+
+      <!-- ZURICH -->
+      <g transform="translate(370, 165)">
+        <circle r="9" fill="rgba(74,103,65,0.6)" stroke="#7EC971" stroke-width="1.5"/>
+        <circle r="4" fill="#7EC971"/>
+        <text y="-15" text-anchor="middle" fill="rgba(250,247,242,0.75)" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">ZÜRICH</text>
+        <text y="-4" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-family="DM Sans, sans-serif" font-size="8">13% of CH firms</text>
+        <text y="6" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-family="DM Sans, sans-serif" font-size="8">Les Millionnaires</text>
+      </g>
+
+      <!-- BERN -->
+      <g transform="translate(245, 220)">
+        <circle r="6" fill="rgba(45,74,103,0.7)" stroke="#6090C0" stroke-width="1.5"/>
+        <circle r="3" fill="#6090C0"/>
+        <text y="-12" text-anchor="middle" fill="rgba(250,247,242,0.6)" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="1">BERN</text>
+      </g>
+
+      <!-- BASEL -->
+      <g transform="translate(330, 135)">
+        <circle r="7" fill="rgba(74,103,65,0.6)" stroke="#7EC971" stroke-width="1.5"/>
+        <circle r="3.5" fill="#7EC971"/>
+        <text y="-13" text-anchor="middle" fill="rgba(250,247,242,0.65)" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="1">BASEL</text>
+        <text y="-2" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-family="DM Sans, sans-serif" font-size="7.5">RETINA · BAIUSHKI</text>
+      </g>
+
+      <!-- LA CHAUX-DE-FONDS -->
+      <g transform="translate(175, 195)">
+        <circle r="5" fill="rgba(139,46,46,0.5)" stroke="#C97070" stroke-width="1"/>
+        <circle r="2.5" fill="#C97070"/>
+        <text y="-10" text-anchor="middle" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="8">LA CHAUX-DE-FONDS</text>
+        <text y="0" text-anchor="middle" fill="rgba(201,168,76,0.4)" font-family="DM Sans, sans-serif" font-size="7">Patek Philippe SHG</text>
+      </g>
+
+      <!-- GÜBELIN LABEL NEAR LUCERNE -->
+      <line x1="330" y1="210" x2="390" y2="195" stroke="rgba(201,168,76,0.25)" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="395" y="192" fill="rgba(201,168,76,0.7)" font-family="DM Sans, sans-serif" font-size="8">Gübelin · Bucherer</text>
+
+      <!-- LEGEND -->
+      <g transform="translate(30, 350)">
+        <circle cx="0" cy="0" r="5" fill="var(--gold)"/>
+        <text x="12" y="4" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Your location (Lucerne)</text>
+        <circle cx="0" cy="18" r="5" fill="rgba(139,46,46,0.7)" stroke="#C97070" stroke-width="1"/>
+        <text x="12" y="22" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Tier 1 — Major Maisons</text>
+        <circle cx="0" cy="36" r="5" fill="rgba(74,103,65,0.7)" stroke="#7EC971" stroke-width="1"/>
+        <text x="12" y="40" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Tier 2 — Independent Ateliers</text>
+      </g>
+    </svg>
+  </div>
+
+  <div style="margin-top: 48px; padding: 24px 32px; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.12); border-radius: 4px;">
+    <p style="font-size: 13px; color: rgba(250,247,242,0.55); line-height: 1.8; font-weight: 300;">
+      📍 <strong style="color: var(--gold); font-weight: 500;">Strategic advantage:</strong> Lucerne sits at the crossroads of Switzerland's two main jewelry hubs — Geneva (west, 2h) and Zürich (north, 45min). Both <strong style="color: var(--warm-white); font-weight: 400;">Gübelin</strong> and <strong style="color: var(--warm-white); font-weight: 400;">Bucherer</strong> — two of Switzerland's most prestigious jewelers — are headquartered in Lucerne itself. This proximity enables fast delivery, confidential production, and face-to-face client relationships.
+    </p>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- SECTION 2: KEY CLIENTS -->
+<section class="section" id="clients">
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <div class="section-title-block">
+      <div class="eyebrow">Target Clients — Switzerland</div>
+      <h2>Priority Clients<br>by Tier</h2>
+    </div>
+  </div>
+
+  <!-- TIER 1 -->
+  <div style="margin-bottom: 8px; padding: 12px 20px; background: rgba(139,46,46,0.08); border-left: 3px solid #C97070; display: flex; align-items: center; gap: 12px;">
+    <span style="width: 8px; height: 8px; border-radius: 50%; background: #C97070; flex-shrink: 0;"></span>
+    <span style="font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #C97070;">Tier 1 — Grand Maisons · Highest volume · Long-term relationships</span>
+  </div>
+  <div class="tiers-grid" style="margin-bottom: 32px;">
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #C97070;"></div>
+        <span class="tier-badge-text" style="color: #C97070;">Lucerne · HQ</span>
+      </div>
+      <h3>Bucherer</h3>
+      <div class="tier-location">Lucerne — same city</div>
+      <p>One of Switzerland's most renowned jewelry and watch retailers, known for passion for diamonds and colored gemstones. Physical proximity enables rapid-turnaround partnerships.</p>
+      <span class="tier-tag" style="background: rgba(139,46,46,0.12); color: #E09090; border: 1px solid rgba(139,46,46,0.25);">Priority Contact First</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #C97070;"></div>
+        <span class="tier-badge-text" style="color: #C97070;">Lucerne · HQ</span>
+      </div>
+      <h3>Gübelin</h3>
+      <div class="tier-location">Lucerne — same city</div>
+      <p>Legendary Swiss jeweler whose bespoke pieces require expert stone setting from initial sketch to final setting. Their gemologists select rare stones and design around them — ideal for specialized setting services.</p>
+      <span class="tier-tag" style="background: rgba(139,46,46,0.12); color: #E09090; border: 1px solid rgba(139,46,46,0.25);">Priority Contact First</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #C97070;"></div>
+        <span class="tier-badge-text" style="color: #C97070;">Geneva · 2h away</span>
+      </div>
+      <h3>Chopard</h3>
+      <div class="tier-location">Geneva</div>
+      <p>High jewelry house with extensive use of colored gemstones and ethical sourcing programs. One of the most active high jewelry producers in Switzerland.</p>
+      <span class="tier-tag" style="background: rgba(139,46,46,0.12); color: #E09090; border: 1px solid rgba(139,46,46,0.25);">Volume Potential</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #C97070;"></div>
+        <span class="tier-badge-text" style="color: #C97070;">Geneva · 2h away</span>
+      </div>
+      <h3>Piaget</h3>
+      <div class="tier-location">Geneva / La Côte-aux-Fées</div>
+      <p>Has a dedicated atelier for goldsmithing and gem setting in Geneva — and during production peaks or for specialized techniques they engage external setters.</p>
+      <span class="tier-tag" style="background: rgba(139,46,46,0.12); color: #E09090; border: 1px solid rgba(139,46,46,0.25);">Overflow Demand</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #C97070;"></div>
+        <span class="tier-badge-text" style="color: #C97070;">Geneva · 2h away</span>
+      </div>
+      <h3>Boghossian</h3>
+      <div class="tier-location">Geneva</div>
+      <p>High jewelry house known for innovative techniques like "Kissing" stone mounting and rare colored gems. Constantly seeking elite setting specialists for complex, non-standard pieces.</p>
+      <span class="tier-tag" style="background: rgba(139,46,46,0.12); color: #E09090; border: 1px solid rgba(139,46,46,0.25);">Technical Specialty Fit</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #8B6020;"></div>
+        <span class="tier-badge-text" style="color: #C08830;">Note</span>
+      </div>
+      <h3>Patek Philippe</h3>
+      <div class="tier-location">La Chaux-de-Fonds (via SHG)</div>
+      <p>Has an in-house setting subsidiary (SHG). Hard to penetrate as primary supplier, but during collection launches or peak seasons they may open to specialist external setters.</p>
+      <span class="tier-tag" style="background: rgba(139,96,32,0.12); color: #C08830; border: 1px solid rgba(139,96,32,0.25);">Long-Term Target</span>
+    </div>
+  </div>
+
+  <!-- TIER 2 -->
+  <div style="margin-bottom: 8px; padding: 12px 20px; background: rgba(74,103,65,0.08); border-left: 3px solid #7EC971; display: flex; align-items: center; gap: 12px;">
+    <span style="width: 8px; height: 8px; border-radius: 50%; background: #7EC971; flex-shrink: 0;"></span>
+    <span style="font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #7EC971;">Tier 2 — Independent Ateliers · Most Accessible · Direct Relationships</span>
+  </div>
+  <div class="tiers-grid" style="grid-template-columns: repeat(3,1fr);">
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #7EC971;"></div>
+        <span class="tier-badge-text" style="color: #7EC971;">Zürich</span>
+      </div>
+      <h3>Les Millionnaires</h3>
+      <div class="tier-location">Zürich Old Town</div>
+      <p>Atelier with in-house goldsmiths, stone setters and gemologists who actively prioritize Swiss suppliers for quality and provenance.</p>
+      <span class="tier-tag" style="background: rgba(74,103,65,0.12); color: #7EC971; border: 1px solid rgba(74,103,65,0.25);">Best Entry Point</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #7EC971;"></div>
+        <span class="tier-badge-text" style="color: #7EC971;">Basel</span>
+      </div>
+      <h3>RETINA® Design</h3>
+      <div class="tier-location">Basel</div>
+      <p>Technical jewelry design studio specializing in complex architectural pieces — frequently requires precision setting for unique, one-of-a-kind commissions.</p>
+      <span class="tier-tag" style="background: rgba(74,103,65,0.12); color: #7EC971; border: 1px solid rgba(74,103,65,0.25);">Technical Fit</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-badge">
+        <div class="tier-dot" style="background: #7EC971;"></div>
+        <span class="tier-badge-text" style="color: #7EC971;">Basel</span>
+      </div>
+      <h3>BAIUSHKI</h3>
+      <div class="tier-location">Basel</div>
+      <p>Works with partner ateliers in Switzerland, Germany and Italy. Emphasizes traditional craft and quality — actively sources from trusted Swiss setting partners.</p>
+      <span class="tier-tag" style="background: rgba(74,103,65,0.12); color: #7EC971; border: 1px solid rgba(74,103,65,0.25);">Network Opportunity</span>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- SECTION 3: EUROPE EXPANSION MAP -->
+<section class="section" id="europe">
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <div class="section-title-block">
+      <div class="eyebrow">Expansion Markets</div>
+      <h2>Europe's Key<br>Jewelry Hubs</h2>
+    </div>
+  </div>
+
+  <!-- Europe SVG Map -->
+  <div class="europe-map-container" style="min-height: 460px; padding: 32px; margin-bottom: 48px;">
+    <svg viewBox="0 0 900 500" style="max-width: 860px; width: 100%;" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Simplified Europe landmass -->
+      <!-- UK -->
+      <path d="M200,80 L230,70 L250,80 L245,120 L230,145 L210,150 L195,130 L190,100 Z" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <!-- France -->
+      <path d="M215,170 L270,155 L320,160 L345,175 L350,215 L330,250 L295,265 L260,255 L230,240 L210,210 L210,185 Z" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <!-- Spain -->
+      <path d="M215,270 L295,270 L330,280 L335,320 L310,350 L265,360 L230,345 L210,315 L210,290 Z" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+      <!-- Germany -->
+      <path d="M330,155 L390,145 L420,150 L425,185 L415,210 L385,225 L355,220 L335,205 L325,180 Z" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <!-- Switzerland (highlighted) -->
+      <path d="M332,215 L365,210 L385,215 L385,235 L365,245 L340,242 L328,232 Z" fill="rgba(201,168,76,0.18)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+      <!-- Italy -->
+      <path d="M340,250 L390,240 L420,255 L430,290 L435,330 L415,365 L390,380 L375,360 L370,330 L355,295 L340,270 Z" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <!-- Belgium / Netherlands -->
+      <path d="M280,140 L325,135 L330,150 L315,158 L280,158 Z" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+      <!-- Czech / Austria -->
+      <path d="M390,165 L450,155 L480,165 L485,185 L460,195 L420,195 L390,185 Z" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+
+      <!-- SWITZERLAND STAR -->
+      <g transform="translate(356, 225)">
+        <circle r="12" fill="rgba(201,168,76,0.2)" stroke="var(--gold)" stroke-width="1.5">
+          <animate attributeName="r" values="12;16;12" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" fill="var(--gold)"/>
+        <text y="-20" text-anchor="middle" fill="var(--gold)" font-family="Cormorant Garamond, serif" font-size="10" letter-spacing="2">LUCERNE</text>
+      </g>
+
+      <!-- LONDON -->
+      <g transform="translate(222, 110)">
+        <circle r="8" fill="rgba(45,74,103,0.7)" stroke="#6090C0" stroke-width="1.5"/>
+        <circle r="4" fill="#6090C0"/>
+        <text y="-14" text-anchor="middle" fill="rgba(250,247,242,0.8)" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">LONDON</text>
+        <text y="-3" text-anchor="middle" fill="rgba(201,168,76,0.55)" font-family="DM Sans, sans-serif" font-size="8">Hatton Garden</text>
+      </g>
+
+      <!-- PARIS -->
+      <g transform="translate(264, 190)">
+        <circle r="8" fill="rgba(139,46,46,0.6)" stroke="#C97070" stroke-width="1.5"/>
+        <circle r="4" fill="#C97070"/>
+        <text y="-14" text-anchor="middle" fill="rgba(250,247,242,0.8)" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">PARIS</text>
+        <text y="-3" text-anchor="middle" fill="rgba(201,168,76,0.55)" font-family="DM Sans, sans-serif" font-size="8">Van Cleef · Cartier</text>
+      </g>
+
+      <!-- PFORZHEIM -->
+      <g transform="translate(368, 178)">
+        <circle r="8" fill="rgba(74,103,65,0.7)" stroke="#7EC971" stroke-width="1.5"/>
+        <circle r="4" fill="#7EC971"/>
+        <text y="-14" text-anchor="middle" fill="rgba(250,247,242,0.8)" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">PFORZHEIM</text>
+        <text y="-3" text-anchor="middle" fill="rgba(201,168,76,0.55)" font-family="DM Sans, sans-serif" font-size="8">Germany's jewelry capital</text>
+      </g>
+
+      <!-- VALENZA / VICENZA -->
+      <g transform="translate(385, 265)">
+        <circle r="8" fill="rgba(123,74,45,0.7)" stroke="#C09070" stroke-width="1.5"/>
+        <circle r="4" fill="#C09070"/>
+        <text y="-14" text-anchor="middle" fill="rgba(250,247,242,0.8)" font-family="DM Sans, sans-serif" font-size="10" letter-spacing="1">VALENZA / VICENZA</text>
+        <text y="-3" text-anchor="middle" fill="rgba(201,168,76,0.55)" font-family="DM Sans, sans-serif" font-size="8">Italy · High jewelry</text>
+      </g>
+
+      <!-- Distance lines from Lucerne -->
+      <line x1="356" y1="225" x2="222" y2="110" stroke="rgba(201,168,76,0.12)" stroke-width="1" stroke-dasharray="6,6"/>
+      <line x1="356" y1="225" x2="264" y2="190" stroke="rgba(201,168,76,0.12)" stroke-width="1" stroke-dasharray="6,6"/>
+      <line x1="356" y1="225" x2="368" y2="178" stroke="rgba(201,168,76,0.18)" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <line x1="356" y1="225" x2="385" y2="265" stroke="rgba(201,168,76,0.18)" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+      <!-- Legend -->
+      <g transform="translate(560, 360)">
+        <rect x="-10" y="-14" width="200" height="110" fill="rgba(26,22,18,0.8)" stroke="rgba(201,168,76,0.15)" stroke-width="1" rx="3"/>
+        <text x="0" y="0" fill="rgba(201,168,76,0.7)" font-family="DM Sans, sans-serif" font-size="9" letter-spacing="2" text-transform="uppercase">MARKET PRIORITY</text>
+        <circle cx="0" cy="18" r="5" fill="var(--gold)"/>
+        <text x="12" y="22" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Your base</text>
+        <circle cx="0" cy="36" r="5" fill="#7EC971"/>
+        <text x="12" y="40" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Tier A — Start here</text>
+        <circle cx="0" cy="54" r="5" fill="#C97070"/>
+        <text x="12" y="58" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Tier B — Phase 2</text>
+        <circle cx="0" cy="72" r="5" fill="#6090C0"/>
+        <text x="12" y="76" fill="rgba(250,247,242,0.5)" font-family="DM Sans, sans-serif" font-size="9">Tier C — Long-term</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Country detail cards -->
+  <div class="countries-grid">
+    <div class="country-card">
+      <div class="country-flag">🇩🇪</div>
+      <h3>Germany</h3>
+      <div class="country-city">Pforzheim — "The Golden City"</div>
+      <p>Europe's highest concentration of jewelry manufacturers per capita. Hundreds of mid-size producers that routinely outsource stone setting for fine and high-end collections. Strong tradition of B2B subcontracting.</p>
+      <span class="distance-badge">⏱ ~2.5h from Lucerne</span>
+    </div>
+    <div class="country-card">
+      <div class="country-flag">🇮🇹</div>
+      <h3>Italy</h3>
+      <div class="country-city">Valenza · Vicenza · Arezzo</div>
+      <p>The "Italian Gold" triangle — the world capital of high jewelry manufacturing. Valenza is the epicenter of fine jewelry design. These ateliers require specialist setters for premium gem-set collections destined for global luxury markets.</p>
+      <span class="distance-badge">⏱ ~3–4h from Lucerne</span>
+    </div>
+    <div class="country-card">
+      <div class="country-flag">🇫🇷</div>
+      <h3>France</h3>
+      <div class="country-city">Paris — Place Vendôme</div>
+      <p>Home to the world's most prestigious jewelry houses — Van Cleef & Arpels, Cartier, Boucheron, Chanel Fine Jewelry. While largely vertically integrated, they outsource specialist setting during peak collection development periods.</p>
+      <span class="distance-badge">⏱ ~4h from Lucerne</span>
+    </div>
+    <div class="country-card">
+      <div class="country-flag">🇬🇧</div>
+      <h3>United Kingdom</h3>
+      <div class="country-city">London — Hatton Garden</div>
+      <p>The most significant fine jewelry district in Northern Europe. Hundreds of independent luxury jewelers actively look for trusted European setting partners — post-Brexit, Swiss suppliers are highly valued for quality assurance.</p>
+      <span class="distance-badge">⏱ ~2h flight from Zürich</span>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- SECTION 4: STRATEGY -->
+<section class="section strategy-section" id="strategy">
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <div class="section-title-block">
+      <div class="eyebrow">Go-To-Market</div>
+      <h2>How to Reach<br>These Clients</h2>
+    </div>
+  </div>
+
+  <div class="strategy-flow">
+    <div class="strategy-item">
+      <div class="strategy-num">1</div>
+      <div class="strategy-content">
+        <h3>Start in Lucerne — Immediate Wins</h3>
+        <p>Bucherer and Gübelin are headquartered in the same city. Request a face-to-face meeting with their Head of Production or Atelier Director. Present a portfolio, offer an NDA, and propose a small pilot project. These two relationships alone could anchor the business.</p>
+        <div class="strategy-tags">
+          <span class="stag">In-Person Visit</span>
+          <span class="stag">Portfolio Presentation</span>
+          <span class="stag">NDA Offer</span>
+          <span class="stag">Pilot Project</span>
+        </div>
+      </div>
+    </div>
+    <div class="strategy-item">
+      <div class="strategy-num">2</div>
+      <div class="strategy-content">
+        <h3>LinkedIn B2B Direct Outreach</h3>
+        <p>Search for "Production Manager", "Head of Atelier", "Sourcing Manager" or "Jewelry Manufacturing Director" at Swiss and European jewelry houses. Send a short, direct message with a portfolio PDF attached. Focus on your Swiss location as a quality signal and your specialty in specific setting techniques (pavé, invisible set, bezel, etc.).</p>
+        <div class="strategy-tags">
+          <span class="stag">LinkedIn Sales Navigator</span>
+          <span class="stag">Cold Outreach</span>
+          <span class="stag">PDF Portfolio</span>
+        </div>
+      </div>
+    </div>
+    <div class="strategy-item">
+      <div class="strategy-num">3</div>
+      <div class="strategy-content">
+        <h3>Trade Fairs — Where Buyers Come to You</h3>
+        <p>The most effective channel for B2B jewelry services. Exhibiting at Inhorgenta (Munich) or Baselworld places you in front of 500+ jewelry buyers and production managers in 3 days. Even attending as a visitor with cards and portfolio is valuable. See Section 05 for the full fair calendar.</p>
+        <div class="strategy-tags">
+          <span class="stag">Inhorgenta Munich</span>
+          <span class="stag">Baselworld</span>
+          <span class="stag">VicenzaOro Italy</span>
+        </div>
+      </div>
+    </div>
+    <div class="strategy-item">
+      <div class="strategy-num">4</div>
+      <div class="strategy-content">
+        <h3>Industry Associations — Credibility & Network</h3>
+        <p>Join the Swiss Jewellery and Watch Industry Federation (FHS) and CIBJO (World Jewellery Confederation). Membership opens referral networks, event access, and buyer introductions. The RJC (Responsible Jewellery Council) certification is highly valued by luxury brands and should be obtained early.</p>
+        <div class="strategy-tags">
+          <span class="stag">FHS Switzerland</span>
+          <span class="stag">CIBJO</span>
+          <span class="stag">RJC Certification</span>
+        </div>
+      </div>
+    </div>
+    <div class="strategy-item">
+      <div class="strategy-num">5</div>
+      <div class="strategy-content">
+        <h3>The Core Sales Message</h3>
+        <p>Every touchpoint should reinforce one clear proposition: expert stone setting, Swiss precision, fast delivery, full confidentiality. Luxury brands pay a premium for Swiss-made components — your location is a competitive advantage, not just a detail.</p>
+        <div class="strategy-tags">
+          <span class="stag">Swiss Precision</span>
+          <span class="stag">Confidential NDA</span>
+          <span class="stag">Fast Turnaround</span>
+          <span class="stag">Specialized Techniques</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- SECTION 5: TRADE FAIRS -->
+<section class="section" id="fairs">
+  <div class="section-header">
+    <div class="section-number">05</div>
+    <div class="section-title-block">
+      <div class="eyebrow">Trade Fair Calendar</div>
+      <h2>Where Deals<br>Get Made</h2>
+    </div>
+  </div>
+
+  <div class="fairs-grid">
+    <div class="fair-card">
+      <div class="fair-month">February</div>
+      <div class="fair-name">Inhorgenta</div>
+      <div class="fair-location">Munich, Germany</div>
+      <p style="font-size:12px; color: rgba(250,247,242,0.5); line-height:1.6;">Top European jewelry B2B fair. Hundreds of manufacturers and buyers. Only 2.5h from Lucerne — the most accessible high-value fair on the calendar.</p>
+      <br><span class="fair-priority priority-high">★ Top Priority</span>
+    </div>
+    <div class="fair-card">
+      <div class="fair-month">March</div>
+      <div class="fair-name">Watches & Wonders</div>
+      <div class="fair-location">Geneva, Switzerland</div>
+      <p style="font-size:12px; color: rgba(250,247,242,0.5); line-height:1.6;">The pinnacle of Swiss luxury watchmaking and jewelry. Direct access to Maison production directors. Swiss proximity makes attendance easy and cost-effective.</p>
+      <br><span class="fair-priority priority-high">★ Top Priority</span>
+    </div>
+    <div class="fair-card">
+      <div class="fair-month">January / June</div>
+      <div class="fair-name">VicenzaOro</div>
+      <div class="fair-location">Vicenza, Italy</div>
+      <p style="font-size:12px; color: rgba(250,247,242,0.5); line-height:1.6;">The premier platform for Italian high jewelry. Essential for entering the Italian market and connecting with the Valenza / Vicenza production cluster.</p>
+      <br><span class="fair-priority priority-high">★ Top Priority</span>
+    </div>
+    <div class="fair-card">
+      <div class="fair-month">April</div>
+      <div class="fair-name">Baselworld</div>
+      <div class="fair-location">Basel, Switzerland</div>
+      <p style="font-size:12px; color: rgba(250,247,242,0.5); line-height:1.6;">The world's largest watch and jewelry fair (when active). Basel is only 1h from Lucerne. A key venue for meeting Swiss Maisons and international buyers.</p>
+      <br><span class="fair-priority priority-med">Secondary</span>
+    </div>
+    <div class="fair-card">
+      <div class="fair-month">June</div>
+      <div class="fair-name">JCK Las Vegas</div>
+      <div class="fair-location">Las Vegas, USA</div>
+      <p style="font-size:12px; color: rgba(250,247,242,0.5); line-height:1.6;">The largest English-speaking jewelry trade fair. For Phase 2 expansion into North American brands sourcing European craftspeople.</p>
+      <br><span class="fair-priority priority-med">Phase 2</span>
+    </div>
+    <div class="fair-card">
+      <div class="fair-month">March</div>
+      <div class="fair-name">HK Jewellery Show</div>
+      <div class="fair-location">Hong Kong</div>
+      <p style="font-size:12px; color: rgba(250,247,242,0.5); line-height:1.6;">Asia's top jewelry sourcing fair. Access to Asian luxury brands seeking European craftsmanship and Swiss-certified production for their premium lines.</p>
+      <br><span class="fair-priority priority-med">Future Expansion</span>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- KEY MESSAGE -->
+<section class="section">
+  <div class="message-box">
+    <p class="quote">
+      "Swiss designers explicitly value <em>Switzerland as a production location</em> for its precision and quality — and prefer independent specialist setters locally. Your location in Lucerne is not just convenient. It is your <em>single greatest competitive advantage.</em>"
+    </p>
+    <p class="attribution">— Market Research Finding · 2025</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">Stone Setting · Market Board</div>
+  <div class="foot-note">Research prepared for internal strategic use · 2025</div>
+</footer>
+
+<script>
+  // Smooth scroll for nav
+  function scrollTo(id) {
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Animate sections on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.tier-card, .country-card, .strategy-item, .fair-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
